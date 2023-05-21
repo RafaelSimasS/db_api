@@ -23,7 +23,6 @@ router.get("/test", async (req, res) => {
   console.log(result);
   res.status(200).send(new Date());
 });
-
 router.post("/create-user", async (req, res) => {
   const data = req.body as SaveDataFormat;
   const { user } = data;
@@ -76,6 +75,14 @@ router.put("/update-user", async (req, res) => {
     }
   } else {
     res.status(404).send("User does not exists!");
+  }
+});
+router.get("/train-model", async (req, res) => {
+  try {
+    res.status(200).send("Sou gostoso e lindo!");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Erro treinando o modelo");
   }
 });
 
