@@ -66,3 +66,36 @@ export async function updateUserFaces(data: UpdateUser) {
   await Promise.all(insertPromises);
   await client.close();
 }
+
+export async function listUsers() {
+  const { db, client } = await connect();
+  const collections = await db.listCollections().toArray();
+  const collectionNames = await collections.map(
+    (collection) => collection.name
+  );
+  collectionNames.sort();
+  await client.close();
+  return collectionNames;
+}
+
+export async function queryCollectionDocumentsToObject(collectionNames: any) {
+  const { db, client } = await connect();
+  const data: { [key: string]: { [key: string]: string } } = {};
+
+  for (const collectionName of collectionNames) {
+    const collection = db.collection(collectionName);
+
+    const documents = await collection.find({}).toArray();
+
+    data[collectionName] = {};
+    for (const document of documents) {
+      for (const key in document) {
+        if (key.startsWith("image")) {
+          data[collectionName][key] = document[key];
+        }
+      }
+    }
+  }
+  await client.close();
+  return data;
+}

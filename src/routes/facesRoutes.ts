@@ -13,6 +13,7 @@ import {
   SaveDataFormat,
   UpdateUser,
 } from "../interfaces/interfaces";
+import { run_train } from "../app/train_run";
 
 router.get("/test", async (req, res) => {
   console.log("Testing");
@@ -79,10 +80,14 @@ router.put("/update-user", async (req, res) => {
 });
 router.get("/train-model", async (req, res) => {
   try {
-    res.status(200).send("Sou gostoso e lindo!");
+    await run_train();
+    res.status(200).send("Modelo treinado!");
   } catch (error) {
-    console.error(error);
-    res.status(500).send("Erro treinando o modelo");
+    if (error instanceof Error) {
+      res.status(500).send("Erro: " + error.message);
+    } else {
+      res.status(500).send("Erro ao treinar modelo");
+    }
   }
 });
 
