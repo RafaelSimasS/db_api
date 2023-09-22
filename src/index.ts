@@ -10,7 +10,7 @@ app.use("/", router);
 const PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000;
 const HOST = process.env.HOST || "192.168.1.14";
 
-app.listen(PORT, () => {
+app.listen(PORT, HOST, () => {
   console.log(`Server running at http://${HOST}:${PORT}/`);
 });
 module.exports = app;
