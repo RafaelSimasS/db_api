@@ -1,6 +1,7 @@
 import * as fs from "fs";
 import * as path from "path";
 import { exec } from "child_process";
+require("dotenv").config();
 import {
   listUsers,
   queryCollectionDocumentsToObject,
@@ -34,7 +35,16 @@ export async function run_train(): Promise<void> {
 }
 
 function executePython(scriptPath: string) {
-  exec("python3.11 " + scriptPath, (error, stdout, stderr) => {
+  let fullCommand = "";
+  if (process.platform === 'win32'){
+    fullCommand = `python3.11 ${scriptPath}`;
+  }else{
+    const shellScriptPath = path.join(appPath, "run.sh");
+    
+    fullCommand = `${shellScriptPath} "${scriptPath}" "${process.env.PYTHON_ENV || 'train_env'}"`;
+  }
+  
+  exec(fullCommand, (error, stdout, stderr) => {
     if (error) {
       console.error(`Erro ao executar o script Python: ${error}`);
       return;

@@ -13,12 +13,20 @@ const dbName = process.env.DB_NAME;
 let cachedClient: MongoClient;
 
 async function connect(): Promise<{ db: Db; client: MongoClient }> {
-  const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.CLUSTER_CREDS}`;
+  const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.CLUSTER_CREDS}/?retryWrites=true&w=majority"`;
   const client = await MongoClient.connect(uri);
   const db = client.db(dbName);
   return { db, client };
 }
-
+export async function testConnection():Promise<void> {
+  const {db, client } = await connect();
+  try{
+    await db.command({ping: 1});
+    console.log("Pinged deployment. You are connected do MongoDB");
+  }finally{
+    await client.close();
+  }
+}
 export async function createUser(data: SaveDataFormat): Promise<void> {
   const { db, client } = await connect();
   const userFacesStorage = await db.collection(data?.user);

@@ -3,7 +3,11 @@ import joblib
 
 
 def save_users_js_to_py():
-    path_atual = os.path.dirname(os.path.abspath(__file__)) + "\\"
+    path_atual = os.path.abspath(os.path.dirname(__file__))
+    if os.name == 'nt':  # Verifica se está no Windows
+        path_atual = path_atual + "\\"
+    else:
+        path_atual = path_atual + "/"
     arq_nomes_js = path_atual + "nomes.txt"
     arq_nomes_python = path_atual + "names.txt"
 

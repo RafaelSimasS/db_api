@@ -4,6 +4,7 @@ import {
   findUser,
   removeUser,
   updateUserFaces,
+  testConnection
 } from "../controllers/facesController";
 
 const router = express.Router();
@@ -17,12 +18,18 @@ import { run_train } from "../app/train_run";
 
 router.get("/test", async (req, res) => {
   console.log("Testing");
-  const data = req.body as SaveDataFormat;
-  const { user } = data;
-  const userName = { user };
-  const result = await findUser(userName);
-  console.log(result);
-  res.status(200).send(new Date());
+  // const data = req.body as SaveDataFormat;
+  // const { user } = data;
+  // const userName = { user };
+  // const result = await findUser(userName);
+  // console.log(result);
+  try{
+    testConnection();
+    await res.status(200).send("Connected To Db")
+
+  }catch (error){
+    res.status(500).send("Not Connected To Db")
+  }
 });
 router.post("/create-user", async (req, res) => {
   const data = req.body as SaveDataFormat;
